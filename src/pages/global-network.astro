@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+<Base title="Global network" description="Sky-Barge Freight is a member of Lognet Global (WCA World) and The Cooperative Logistics Network, giving customers air, ocean and land coverage worldwide.">
+  <PageHero title="Global network" crumbs={[{ label: 'Global network' }]} intro="Partner members in cities across almost every country." />
+
+  <section class="section">
+    <div class="wrap net">
+      <div>
+        <h2>Lognet Global, powered by WCA World</h2>
+        <p>
+          Sky-Barge is a privileged member of Lognet Global, a logistics network powered by WCA World, the world's
+          biggest freight forwarding network, with partner members in cities across almost every country.
+        </p>
+      </div>
+      <div>
+        <h2>The Cooperative Logistics Network</h2>
+        <p>
+          Sky-Barge is also the exclusive member of The Cooperative Logistics Network, a capped alliance of hand-picked
+          freight forwarders in each major air and sea port who cooperate in a financially secure environment to reduce
+          costs and risks.
+        </p>
+      </div>
+    </div>
+    <figure class="wrap map">
+      <img src="/images/world-map.png" alt="World map of the Sky-Barge partner network" width="1200" height="600" loading="lazy" />
+    </figure>
+    <div class="wrap">
+      <p class="lede">
+        Our focus is a truly global air, ocean and land network with a consistent, high-quality set of products.
+        Together these let us handle and move cargo seamlessly anywhere in the world.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand title="Not sure which solution fits your business?" />
+</Base>
+
+<style>
+  .net { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+  .net > div { border-top: 4px solid var(--signal); padding-top: 1.25rem; }
+  .map { margin-block: 3rem; }
+  .map img { width: 100%; }
+  @media (max-width: 760px) { .net { grid-template-columns: 1fr; } }
+</style>

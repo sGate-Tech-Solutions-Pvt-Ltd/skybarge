@@ -1,0 +1,47 @@
+---
+import { company } from '../data/site';
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const id = 'contact';
+const topics = ['General enquiry', 'Air freight', 'Ocean freight', 'Customs clearance', 'Warehousing & distribution', 'Projects', 'Careers'];
+---
+<form id={id} data-static-form data-key={key} data-mailto={company.email}
+  data-success="Message sent. We will reply within one working day.">
+  <input type="hidden" name="subject" value="Enquiry from skybarge.in" />
+  <input type="hidden" name="from_name" value="Sky-Barge website" />
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+
+  <div class="form-grid">
+    <div class="field">
+      <label for={`${id}-name`}>Your name</label>
+      <input id={`${id}-name`} name="name" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-company`}>Company</label>
+      <input id={`${id}-company`} name="company" autocomplete="organization" />
+    </div>
+    <div class="field">
+      <label for={`${id}-email`}>Email</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-phone`}>Phone</label>
+      <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" />
+    </div>
+    <div class="field span-all">
+      <label for={`${id}-topic`}>What is this about?</label>
+      <select id={`${id}-topic`} name="topic">
+        {topics.map((t) => <option>{t}</option>)}
+      </select>
+    </div>
+    <div class="field span-all">
+      <label for={`${id}-message`}>Message</label>
+      <textarea id={`${id}-message`} name="message" required></textarea>
+    </div>
+  </div>
+  <p style="margin-top:1.25rem"><button class="btn" type="submit">Send message</button></p>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  import '../scripts/forms';
+</script>

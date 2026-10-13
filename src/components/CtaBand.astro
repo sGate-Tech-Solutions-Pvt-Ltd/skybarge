@@ -1,0 +1,26 @@
+---
+interface Props { title: string; text?: string; }
+const { title, text } = Astro.props;
+---
+<section class="cta">
+  <div class="wrap cta__inner">
+    <div>
+      <h2>{title}</h2>
+      {text && <p>{text}</p>}
+    </div>
+    <div class="cta__actions">
+      <a class="btn btn--signal" href="/contact-us/">Contact us</a>
+      <a class="btn btn--line" href="/#quote">Request a quote</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { background: var(--sea); color: var(--white); padding-block: clamp(2.5rem, 6vw, 3.75rem); }
+  .cta__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .cta h2 { margin: 0 0 0.35rem; }
+  .cta p { margin: 0; color: #d7e4ec; }
+  .cta__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .btn--line { background: transparent; border-color: var(--white); color: var(--white); }
+  .btn--line:hover { background: var(--white); color: var(--ink); border-color: var(--white); }
+</style>

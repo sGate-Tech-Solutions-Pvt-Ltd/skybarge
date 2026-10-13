@@ -1,0 +1,142 @@
+---
+import { modes, company } from '../data/site';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media" aria-hidden="true">
+    {modes.map((m, i) => (
+      <img
+        src={m.image}
+        alt=""
+        data-mode={m.id}
+        class={i === 0 ? 'is-active' : undefined}
+        loading={i === 0 ? 'eager' : 'lazy'}
+        fetchpriority={i === 0 ? 'high' : 'auto'}
+        width="1920"
+        height="900"
+      />
+    ))}
+  </div>
+
+  <div class="wrap hero__body">
+    <p class="hero__since">International freight forwarding from India since {company.founded}</p>
+    <h1 id="hero-title">Large enough to handle,<br />small enough to care.</h1>
+    <p class="hero__note" aria-live="polite">{modes[0].note}</p>
+    <div class="hero__actions">
+      <a class="btn btn--signal" href="#quote">Request a quote</a>
+      <a class="btn hero__ghost" href="/all-services/">See all services</a>
+    </div>
+  </div>
+
+  <div class="hero__modes">
+    <div class="wrap">
+      <div class="modes" role="tablist" aria-label="Our services">
+        {modes.map((m, i) => (
+          <button
+            role="tab"
+            type="button"
+            data-mode={m.id}
+            data-note={m.note}
+            aria-selected={i === 0 ? 'true' : 'false'}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const tabs = hero?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [];
+  const imgs = hero?.querySelectorAll<HTMLImageElement>('.hero__media img') ?? [];
+  const note = hero?.querySelector('.hero__note');
+
+  function select(tab: HTMLButtonElement) {
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+    imgs.forEach((img) => img.classList.toggle('is-active', img.dataset.mode === tab.dataset.mode));
+    if (note) note.textContent = tab.dataset.note ?? '';
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!dir) return;
+      const next = tabs[(i + dir + tabs.length) % tabs.length];
+      next.focus();
+      select(next);
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    color: var(--white);
+    background: var(--ink);
+    min-height: min(46rem, 88vh);
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+  .hero__media { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+  .hero__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .hero__media img.is-active { opacity: 1; }
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(11, 37, 69, 0.94) 0%, rgba(11, 37, 69, 0.78) 45%, rgba(11, 37, 69, 0.25) 100%),
+      linear-gradient(0deg, rgba(11, 37, 69, 0.85) 0%, rgba(11, 37, 69, 0) 35%);
+  }
+
+  .hero__body { align-self: center; padding-block: clamp(3rem, 8vw, 5rem); }
+  .hero__since { color: var(--signal); font-weight: 600; margin-bottom: 1rem; }
+  .hero h1 { font-size: clamp(2.7rem, 1.5rem + 5vw, 5.4rem); line-height: 0.98; margin-bottom: 1.25rem; }
+  .hero__note { font-size: var(--step-1); color: #dbe4eb; max-width: 40ch; min-height: 3em; }
+  .hero__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .hero__ghost { background: transparent; border-color: rgba(255, 255, 255, 0.7); }
+  .hero__ghost:hover { background: var(--white); color: var(--ink); border-color: var(--white); }
+
+  .hero__modes { border-top: 1px solid rgba(255, 255, 255, 0.18); background: rgba(11, 37, 69, 0.55); }
+  .modes { display: grid; grid-template-columns: repeat(6, 1fr); }
+  .modes button {
+    font: 600 1.15rem/1.2 var(--font-display);
+    letter-spacing: 0.02em;
+    color: #c6d2dc;
+    background: none;
+    border: 0;
+    border-top: 4px solid transparent;
+    padding: 1.1rem 0.75rem 1.2rem;
+    text-align: left;
+    cursor: pointer;
+  }
+  .modes button + button { border-left: 1px solid rgba(255, 255, 255, 0.12); }
+  .modes button:hover { color: var(--white); }
+  .modes button[aria-selected='true'] { color: var(--white); border-top-color: var(--signal); background: rgba(255, 255, 255, 0.06); }
+
+  @media (max-width: 860px) {
+    .modes { grid-template-columns: repeat(3, 1fr); }
+    .modes button:nth-child(4) { border-left: 0; }
+    .modes button:nth-child(n + 4) { border-top-color: rgba(255, 255, 255, 0.12); }
+    .modes button[aria-selected='true'] { border-top-color: var(--signal); }
+  }
+  @media (max-width: 480px) {
+    .modes { grid-template-columns: repeat(2, 1fr); }
+    .modes button { font-size: 1.05rem; padding: 0.9rem 0.6rem; }
+    .modes button:nth-child(odd) { border-left: 0; }
+    .modes button:nth-child(4) { border-left: 1px solid rgba(255, 255, 255, 0.12); }
+    .modes button:nth-child(n + 3) { border-top-color: rgba(255, 255, 255, 0.12); }
+    .modes button[aria-selected='true'] { border-top-color: var(--signal); }
+  }
+</style>

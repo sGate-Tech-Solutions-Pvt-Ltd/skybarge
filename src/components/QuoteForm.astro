@@ -1,0 +1,60 @@
+---
+import { company, freightTypes, incoterms } from '../data/site';
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const id = 'quote';
+---
+<form id={id} class="quote" data-static-form data-key={key} data-mailto={company.email}
+  data-success="Quote request sent. We will reply within one working day.">
+  <input type="hidden" name="subject" value="Quote request from skybarge.in" />
+  <input type="hidden" name="from_name" value="Sky-Barge website" />
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+
+  <div class="form-grid">
+    <div class="field">
+      <label for={`${id}-name`}>Your name</label>
+      <input id={`${id}-name`} name="name" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-email`}>Email</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-phone`}>Phone</label>
+      <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" />
+    </div>
+    <div class="field">
+      <label for={`${id}-freight`}>Freight type</label>
+      <select id={`${id}-freight`} name="freight_type">
+        {freightTypes.map((f) => <option>{f}</option>)}
+      </select>
+    </div>
+    <div class="field">
+      <label for={`${id}-from`}>From (city / port)</label>
+      <input id={`${id}-from`} name="origin" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-to`}>To (city / port)</label>
+      <input id={`${id}-to`} name="destination" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-weight`}>Total gross weight (kg)</label>
+      <input id={`${id}-weight`} name="weight" inputmode="decimal" />
+    </div>
+    <div class="field">
+      <label for={`${id}-incoterm`}>Incoterms</label>
+      <select id={`${id}-incoterm`} name="incoterms">
+        {incoterms.map((t) => <option>{t}</option>)}
+      </select>
+    </div>
+    <div class="field span-all">
+      <label for={`${id}-message`}>Cargo details</label>
+      <textarea id={`${id}-message`} name="message" placeholder="Commodity, packages, dimensions, ready date"></textarea>
+    </div>
+  </div>
+  <p style="margin-top:1.25rem"><button class="btn" type="submit">Send quote request</button></p>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  import '../scripts/forms';
+</script>

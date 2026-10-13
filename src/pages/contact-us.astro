@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { branches, company } from '../data/site';
+---
+<Base title="Contact us" description="Contact Sky-Barge Freight in Delhi, Mumbai and Chennai for freight, customs and logistics enquiries.">
+  <PageHero title="Contact us" crumbs={[{ label: 'Contact us' }]} intro={`We answer enquiries ${company.hours}.`} />
+
+  <section class="section">
+    <div class="wrap contact">
+      <div>
+        <h2>Send us a message</h2>
+        <p>Pick the topic closest to your question and we will route it to the right team.</p>
+        <ContactForm />
+      </div>
+      <div>
+        <h2>Our offices</h2>
+        <ul class="branches">
+          {branches.map((b) => (
+            <li>
+              <h3>{b.city} <span>{b.role}</span></h3>
+              <address>{b.address}</address>
+              <p>
+                {b.phones.map((p) => (
+                  <>{p.label}: <a href={`tel:${p.href}`}>{p.display}</a><br /></>
+                ))}
+                Email: <a href={`mailto:${b.email}`}>{b.email}</a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="mapframe" aria-label="Map of the Delhi head office">
+    <iframe
+      title="Sky-Barge head office on Google Maps"
+      src="https://maps.google.com/maps?q=06%20Club%20Drive%20Road%2C%20Ghitorni%2C%20New%20Delhi%20110030&output=embed"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+</Base>
+
+<style>
+  .contact { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(2rem, 5vw, 4rem); }
+  .branches { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+  .branches li { padding: 1.25rem 0; border-bottom: 1px solid var(--line); }
+  .branches h3 { margin-bottom: 0.35rem; }
+  .branches h3 span { font: 500 var(--step--1) var(--font-body); color: var(--steel); margin-left: 0.5rem; }
+  .branches address { font-style: normal; margin-bottom: 0.5rem; }
+  .branches p { margin: 0; }
+  .mapframe iframe { display: block; width: 100%; height: 380px; border: 0; filter: grayscale(0.4); }
+  @media (max-width: 860px) { .contact { grid-template-columns: 1fr; } }
+</style>

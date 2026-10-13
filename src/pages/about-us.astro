@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { company, branches, services } from '../data/site';
+
+const years = new Date().getFullYear() - company.founded;
+---
+<Base title="About us" description="Founded in Delhi in 2004, Sky-Barge Freight provides air and sea freight, customs clearance, warehousing and project logistics across India.">
+  <PageHero title="About us" crumbs={[{ label: 'About us' }]} intro={company.tagline} />
+
+  <section class="section">
+    <div class="wrap about">
+      <div class="about__text">
+        <h2>From four people in Delhi to a national freight forwarder</h2>
+        <p class="lede">
+          Sky-Barge started in January {company.founded} with a combined strength of four people, serving air export
+          shipments out of Delhi.
+        </p>
+        <p>
+          With passion, zeal and diligence, Sky-Barge kept creating and strengthening new verticals in international
+          logistics, and spread its wings into every vertical of air and sea exports and imports.
+        </p>
+        <p>
+          Headquartered in Delhi, Sky-Barge has its own offices at major locations and associate logistics partners
+          across India. We offer a single-source solution for all your transportation, logistics, customs and trade
+          needs, with a personalised experience for each customer.
+        </p>
+      </div>
+      <dl class="facts">
+        <div><dt>{company.founded}</dt><dd>Founded in Delhi</dd></div>
+        <div><dt>{years}+ years</dt><dd>In international logistics</dd></div>
+        <div><dt>{branches.length} offices</dt><dd>{branches.map((b) => b.city).join(', ')}</dd></div>
+        <div><dt>{services.length} service lines</dt><dd>Forwarding, warehousing, customs and more</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <h2>How we work</h2>
+      <div class="values">
+        <div><h3>Quality</h3><p>Every shipment is handled by people who know the commodity, the route and the paperwork.</p></div>
+        <div><h3>Focus on service</h3><p>One point of contact from booking to delivery, and straight answers when plans change.</p></div>
+        <div><h3>Fair pricing</h3><p>Rates that follow the market, quoted clearly so there are no surprises on the invoice.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Talk to our team" text="Tell us about your cargo and we will suggest the right route and mode." />
+</Base>
+
+<style>
+  .about { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: clamp(2rem, 5vw, 4rem); }
+  .facts { margin: 0; display: grid; gap: 0; border-top: 2px solid var(--ink); align-content: start; }
+  .facts div { padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
+  .facts dt { font: 700 2rem/1 var(--font-display); }
+  .facts dd { margin: 0.3rem 0 0; color: var(--steel); }
+  .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1.5rem; }
+  .values div { border-top: 4px solid var(--signal); padding-top: 1rem; }
+  @media (max-width: 860px) { .about, .values { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,148 @@
+---
+import { nav, services, company } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href) || (href === '/all-services/' && path.startsWith('/services/'));
+---
+<header class="site-header">
+  <div class="topbar">
+    <div class="wrap topbar__inner">
+      <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+      <a href={`mailto:${company.email}`}>{company.email}</a>
+      <span class="topbar__hours">{company.hours}</span>
+    </div>
+  </div>
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label={`${company.name}, home`}>
+      <img src="/images/logo.png" alt={company.name} width="210" height="56" />
+    </a>
+
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-btn__lines" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="Main">
+      <ul>
+        {nav.map((item) => (
+          <li class={item.href === '/all-services/' ? 'has-sub' : undefined}>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+            {item.href === '/all-services/' && (
+              <ul class="sub">
+                {services.map((s) => (
+                  <li><a href={`/services/${s.slug}/`}>{s.title}</a></li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      <a class="btn btn--signal nav__cta" href="/#quote">Request a quote</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const navEl = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    navEl?.classList.toggle('is-open', !open);
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar { background: var(--ink); color: #c6d2dc; font-size: var(--step--1); }
+  .topbar__inner { display: flex; gap: 1.75rem; padding-block: 0.4rem; flex-wrap: wrap; }
+  .topbar a { color: var(--white); text-decoration: none; }
+  .topbar a:hover { text-decoration: underline; color: var(--white); }
+  .topbar__hours { margin-left: auto; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }
+  .brand img { height: 48px; width: auto; }
+
+  .nav { display: flex; align-items: center; gap: 1.5rem; }
+  .nav > ul { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+  .nav > ul > li { position: relative; }
+  .nav a { text-decoration: none; color: var(--ink); }
+  .nav > ul > li > a {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+  }
+  .nav > ul > li > a[aria-current='page'] { border-bottom-color: var(--signal); }
+  .nav > ul > li > a:hover { color: var(--sea); }
+
+  .sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 17rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--ink);
+    visibility: hidden;
+    opacity: 0;
+  }
+  .has-sub:hover .sub, .has-sub:focus-within .sub { visibility: visible; opacity: 1; }
+  .sub a { display: block; padding: 0.5rem 1rem; }
+  .sub a:hover { background: var(--paper); }
+
+  .menu-btn {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    font: 600 1rem var(--font-body);
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+  }
+  .menu-btn__lines, .menu-btn__lines::before, .menu-btn__lines::after {
+    display: block; width: 18px; height: 2px; background: var(--ink); position: relative;
+  }
+  .menu-btn__lines::before, .menu-btn__lines::after { content: ''; position: absolute; left: 0; }
+  .menu-btn__lines::before { top: -6px; }
+  .menu-btn__lines::after { top: 6px; }
+
+  @media (max-width: 960px) {
+    .topbar__hours { display: none; }
+    .menu-btn { display: inline-flex; }
+    .nav {
+      display: none;
+      position: absolute;
+      left: 0; right: 0; top: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 0.5rem var(--gutter) 1.25rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
+    .nav.is-open { display: flex; }
+    .nav > ul { flex-direction: column; }
+    .nav > ul > li > a { border-bottom: 1px solid var(--line); border-left: 3px solid transparent; }
+    .nav > ul > li > a[aria-current='page'] { border-bottom-color: var(--line); border-left-color: var(--signal); }
+    .sub { position: static; visibility: visible; opacity: 1; border: 0; padding: 0 0 0 1rem; }
+    .nav__cta { justify-content: center; }
+  }
+  @media (max-width: 560px) {
+    .topbar__inner a:last-child { display: none; }
+  }
+</style>

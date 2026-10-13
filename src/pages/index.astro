@@ -1,0 +1,196 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import { capabilities, partners, company } from '../data/site';
+
+const strengths = [
+  { title: 'Packaging and storage', text: 'Palletisation, fumigation and secure storage before dispatch.' },
+  { title: 'Warehousing service', text: 'Warehousing, indent deliveries and onward distribution.' },
+  { title: 'Ground transport', text: 'Inland trucking, heavy-lift and over-dimensional cargo.' },
+  { title: 'Logistic services', text: 'One contact for freight, customs, documentation and delivery.' },
+];
+---
+<Base>
+  <Hero />
+
+  <section class="section welcome">
+    <div class="wrap welcome__grid">
+      <div>
+        <h2>Welcome to Sky-Barge Freight</h2>
+        <p class="lede">
+          Sky-Barge started in January {company.founded} with a team of four, handling air export shipments out of Delhi.
+        </p>
+        <p>
+          With passion, zeal and diligence, Sky-Barge kept creating and strengthening new verticals in international
+          logistics, and spread its wings into every vertical of air and sea exports and imports. Headquartered in Delhi,
+          Sky-Barge has its own offices at major locations and associate logistics partners across India.
+        </p>
+        <p>
+          We offer a single-source solution for all your transportation, logistics, customs and trade needs, with a
+          personalised experience for each customer.
+        </p>
+        <a class="btn btn--ghost" href="/about-us/">More about us</a>
+      </div>
+      <figure class="welcome__photo">
+        <img src="/images/about.jpg" alt="Sky-Barge cargo operations" width="700" height="520" loading="lazy" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="head">
+        <h2>What we do</h2>
+        <p class="lede">Our services are driven by quality, focus on service, market awareness and fair pricing.</p>
+      </div>
+      <ul class="caps">
+        {capabilities.map((c) => (
+          <li>
+            <img src={c.icon} alt="" width="56" height="56" loading="lazy" />
+            <div>
+              <h3>{c.title}</h3>
+              <p>{c.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p><a class="btn" href="/all-services/">See service details</a></p>
+    </div>
+  </section>
+
+  <section class="section section--ink promise">
+    <div class="wrap"><div class="promise__inner">
+      <h2>Your cargo, delivered safe and on time</h2>
+      <p class="lede">
+        From pick-up to final delivery, one team looks after your shipment and keeps you informed at every stage.
+      </p>
+      <a class="btn btn--signal" href="/contact-us/">Contact us</a>
+    </div></div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <h2>Our carrier partners</h2>
+      </div>
+      <ul class="partners">
+        {partners.map((src) => (
+          <li><img src={src} alt="Carrier partner logo" loading="lazy" width="160" height="80" /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap special">
+      <div>
+        <h2>What makes us special?</h2>
+        <p class="lede">
+          We look for solutions that meet your needs, keep customers satisfied, and respect supply-chain timing and regulations.
+        </p>
+      </div>
+      <dl>
+        {strengths.map((s) => (
+          <div>
+            <dt>{s.title}</dt>
+            <dd>{s.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section quote-section" id="quote">
+    <div class="wrap quote__grid">
+      <div>
+        <h2>Request a free quote</h2>
+        <p class="lede">Tell us what you are shipping and where. A member of our team will reply within one working day.</p>
+        <p>
+          Prefer to talk? Call <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+          or email <a href={`mailto:${company.email}`}>{company.email}</a>.
+        </p>
+      </div>
+      <QuoteForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { margin-bottom: 2.5rem; }
+  .head .lede { margin: 0; }
+
+  .welcome__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .welcome__photo { margin: 0; position: relative; }
+  .welcome__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--paper); border-radius: var(--radius); }
+  .welcome__photo::before {
+    content: '';
+    position: absolute;
+    left: -14px; bottom: -14px;
+    width: 45%; height: 45%;
+    background: var(--hatch);
+    z-index: -1;
+  }
+  .welcome { position: relative; isolation: isolate; }
+
+  .caps {
+    list-style: none;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid var(--ink);
+  }
+  .caps li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .caps img { width: 48px; height: 48px; flex: none; object-fit: contain; }
+  .caps h3 { font-size: 1.35rem; margin: 0 0 0.2rem; }
+  .caps p { margin: 0; color: var(--steel); font-size: var(--step--1); }
+
+  .promise__inner { max-width: 48rem; }
+  .promise h2 { font-size: var(--step-4); }
+
+  .partners {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .partners li {
+    flex: 1 1 9rem;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    min-height: 6rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .partners img { max-height: 56px; width: auto; filter: grayscale(1); opacity: 0.8; }
+  .partners li:hover img { filter: none; opacity: 1; }
+
+  .special { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); }
+  .special dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 2.5rem; }
+  .special dl div { border-left: 4px solid var(--signal); padding-left: 1rem; }
+  .special dt { font: 600 1.35rem/1.2 var(--font-display); margin-bottom: 0.3rem; }
+  .special dd { margin: 0; color: var(--steel); }
+
+  .quote__grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .quote-section { border-top: 1px solid var(--line); }
+
+  @media (max-width: 960px) {
+    .caps { grid-template-columns: repeat(2, 1fr); }
+    .welcome__grid, .special, .quote__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .caps { grid-template-columns: 1fr; }
+    .special dl { grid-template-columns: 1fr; }
+  }
+</style>

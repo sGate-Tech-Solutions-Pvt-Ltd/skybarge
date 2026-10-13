@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { services } from '../data/site';
+---
+<Base title="Services" description="Freight forwarding, warehousing and distribution, customs clearance and export-import support services from Sky-Barge Freight.">
+  <PageHero title="Services" crumbs={[{ label: 'Services' }]} intro="A single source for transportation, logistics, customs and trade." />
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="svc">
+        {services.map((s) => (
+          <li>
+            <a href={`/services/${s.slug}/`}>
+              <img src={s.image} alt="" width="400" height="260" loading="lazy" />
+              <div>
+                <h2>{s.title}</h2>
+                <p>{s.summary}</p>
+                <span class="more">View {s.items.length} services</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title="Not sure which solution fits your business?" text="Our team will help you pick the right mode and route." />
+</Base>
+
+<style>
+  .svc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .svc a { display: grid; grid-template-columns: 11rem 1fr; gap: 1.5rem; text-decoration: none; color: var(--ink); padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+  .svc img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--paper); border-radius: var(--radius); }
+  .svc h2 { font-size: var(--step-2); margin-bottom: 0.4rem; }
+  .svc p { color: var(--steel); margin-bottom: 0.75rem; }
+  .more { font-weight: 600; color: var(--sea); border-bottom: 2px solid var(--signal); }
+  .svc a:hover h2 { color: var(--sea); }
+  @media (max-width: 860px) { .svc { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .svc a { grid-template-columns: 1fr; } .svc img { aspect-ratio: 16 / 9; } }
+</style>

@@ -1,0 +1,37 @@
+---
+interface Props {
+  title: string;
+  crumbs?: { label: string; href?: string }[];
+  intro?: string;
+}
+const { title, crumbs = [], intro } = Astro.props;
+---
+<section class="page-hero">
+  <div class="wrap">
+    <nav aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        {crumbs.map((c) => (
+          <li>{c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>
+        ))}
+      </ol>
+    </nav>
+    <h1>{title}</h1>
+    {intro && <p class="lede">{intro}</p>}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 5vw, 3rem);
+    border-bottom: 6px solid var(--signal);
+  }
+  .page-hero h1 { margin: 0.4rem 0 0.25rem; }
+  .page-hero .lede { color: #c6d2dc; margin: 0.5rem 0 0; }
+  ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; font-size: var(--step--1); color: #9fb0bf; }
+  li + li::before { content: '/'; margin: 0 0.5rem; color: #6d8296; }
+  a { color: #c6d2dc; }
+  a:hover { color: var(--white); }
+</style>
