@@ -110,7 +110,7 @@ a:hover { color: var(--ink); }
 }
 .btn:hover { background: var(--sea); border-color: var(--sea); color: var(--white); }
 .btn--signal { background: var(--signal); border-color: var(--signal); color: var(--ink); }
-.btn--signal:hover { background: var(--white); border-color: var(--white); color: var(--ink); }
+.btn--signal:hover { background: #0b2545; border-color: var(--white); color: #fff !important; }
 .btn--ghost { background: transparent; color: var(--ink); }
 .btn--ghost:hover { background: var(--ink); color: var(--white); }
 

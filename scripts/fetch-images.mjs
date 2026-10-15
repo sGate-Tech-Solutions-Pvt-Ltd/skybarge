@@ -10,7 +10,7 @@ const WP = 'https://www.skybarge.in/wp-content/uploads';
 const files = {
   'logo.png': `${WP}/2021/03/skybarge-logo.png`,
   'logo-light.png': `${WP}/2021/07/skybarge-logo.png`,
-  'favicon.jpg': `${WP}/2021/03/favicon.jpg`,
+  'favicon.png': `${WP}/2021/03/favicon.png`,
 
   'hero-ocean.jpg': `${WP}/2021/03/ocenfre.jpg`,
   'hero-air.jpg': `${WP}/2021/04/plane_contrasted_light.jpg`,

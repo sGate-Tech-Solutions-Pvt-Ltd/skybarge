@@ -58,16 +58,54 @@ import { modes, company } from '../data/site';
     if (note) note.textContent = tab.dataset.note ?? '';
   }
 
+  const INTERVAL = 4000;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let current = 0;
+  let timer: number | undefined;
+  let paused = false;
+
+  function stop() {
+    window.clearInterval(timer);
+    timer = undefined;
+  }
+
+  function start() {
+    stop();
+    if (reduceMotion || paused || tabs.length < 2) return;
+    timer = window.setInterval(() => {
+      current = (current + 1) % tabs.length;
+      select(tabs[current]);
+    }, INTERVAL);
+  }
+
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('click', () => {
+      current = i;
+      select(tab);
+      start();
+    });
     tab.addEventListener('keydown', (e) => {
       const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!dir) return;
-      const next = tabs[(i + dir + tabs.length) % tabs.length];
+      current = (i + dir + tabs.length) % tabs.length;
+      const next = tabs[current];
       next.focus();
       select(next);
     });
   });
+
+  // Pause while the visitor is hovering or using the hero, and when the tab is hidden.
+  hero?.addEventListener('mouseenter', () => { paused = true; stop(); });
+  hero?.addEventListener('mouseleave', () => { paused = false; start(); });
+  hero?.addEventListener('focusin', () => { paused = true; stop(); });
+  hero?.addEventListener('focusout', (e) => {
+    if (hero?.contains(e.relatedTarget as Node)) return;
+    paused = false;
+    start();
+  });
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
+  start();
 </script>
 
 <style>

@@ -74,11 +74,26 @@ const strengths = [
       <div class="head">
         <h2>Our carrier partners</h2>
       </div>
-      <ul class="partners">
-        {partners.map((src) => (
-          <li><img src={src} alt="Carrier partner logo" loading="lazy" width="160" height="80" /></li>
-        ))}
-      </ul>
+      <div class="partners-slider" data-partners data-count={partners.length}>
+      <button class="partners__arrow partners__arrow--prev" type="button" aria-label="Previous partner" data-prev>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <div class="partners">
+        <ul class="partners__track">
+          {[...partners, ...partners, ...partners].map((src, i) => {
+            const isClone = i < partners.length || i >= partners.length * 2;
+            return (
+              <li aria-hidden={isClone ? 'true' : undefined}>
+                <img src={src} alt={isClone ? '' : 'Carrier partner logo'} width="160" height="80" />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <button class="partners__arrow partners__arrow--next" type="button" aria-label="Next partner" data-next>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      </div>
     </div>
   </section>
 
@@ -115,6 +130,54 @@ const strengths = [
     </div>
   </section>
 </Base>
+
+<script>
+  // Logo carousel showing 4 logos (3 on tablet, 2 on phone): steps one logo at a time
+  // and loops by snapping back into the middle copy of the tripled list.
+  document.querySelectorAll<HTMLElement>('[data-partners]').forEach((root) => {
+    const viewport = root.querySelector<HTMLElement>('.partners')!;
+    const track = root.querySelector<HTMLElement>('.partners__track')!;
+    const count = Number(root.dataset.count);
+    if (!count) return;
+
+    let active = count;
+
+    const perView = () => (window.innerWidth < 600 ? 2 : window.innerWidth < 960 ? 3 : 4);
+
+    const render = (animate: boolean) => {
+      const w = viewport.clientWidth / perView();
+      track.style.setProperty('--w', `${w}px`);
+      track.classList.toggle('is-animating', animate);
+      track.style.transform = `translateX(${-active * w}px)`;
+    };
+
+    const step = (dir: 1 | -1 = 1) => {
+      if (active >= count * 2 || active < count) {
+        active += active < count ? count : -count;
+        render(false);
+        void track.offsetWidth; // flush so the snap-back is not animated
+      }
+      active += dir;
+      render(true);
+    };
+
+    render(false);
+    window.addEventListener('resize', () => render(false));
+
+    const autoplay = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer = 0;
+    const start = () => { if (autoplay) { window.clearInterval(timer); timer = window.setInterval(step, 2500); } };
+    const stop = () => window.clearInterval(timer);
+
+    root.querySelector('[data-prev]')!.addEventListener('click', () => step(-1));
+    root.querySelector('[data-next]')!.addEventListener('click', () => step(1));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    start();
+  });
+</script>
 
 <style>
   .head { margin-bottom: 2.5rem; }
@@ -155,26 +218,60 @@ const strengths = [
   .promise__inner { max-width: 48rem; }
   .promise h2 { font-size: var(--step-4); }
 
+  .partners-slider { position: relative; display: flex; align-items: center; gap: 0.75rem; }
+  .partners__arrow {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .partners__arrow:hover,
+  .partners__arrow:focus-visible { background: var(--ink); color: #fff; border-color: var(--ink); }
   .partners {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding: 1.5rem 0;
+  }
+  .partners__track {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
-    border-top: 1px solid var(--line);
-    border-left: 1px solid var(--line);
+    flex-wrap: nowrap;
+    width: max-content;
   }
+  .partners__track.is-animating { transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1); }
   .partners li {
-    flex: 1 1 9rem;
+    flex: none;
+    width: var(--w, 25%);
     display: grid;
     place-items: center;
-    padding: 1.25rem;
-    min-height: 6rem;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    padding: 0 1.5rem;
+    min-height: 7rem;
   }
-  .partners img { max-height: 56px; width: auto; filter: grayscale(1); opacity: 0.8; }
+  .partners img {
+    max-height: 60px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: filter 0.3s, opacity 0.3s;
+  }
   .partners li:hover img { filter: none; opacity: 1; }
+
+  @media (max-width: 600px) {
+    .partners li { padding: 0 0.75rem; }
+  }
 
   .special { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); }
   .special dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 2.5rem; }
